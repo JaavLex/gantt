@@ -1,73 +1,65 @@
-var names = [
-    ["Redesign website", [0, 7]],
-    ["Write new content", [1, 4]],
-    ["Apply new styles", [3, 6]],
-    ["Review", [7, 7]],
-    ["Deploy", [8, 9]],
-    ["Go Live!", [10, 10]]
-];
-
-var tasks = names.map(function(name, i) {
-    var today = new Date();
-    var start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    var end = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    start.setDate(today.getDate() + name[1][0]);
-    end.setDate(today.getDate() + name[1][1]);
-    return {
-        start: start,
-        end: end,
-        name: name[0],
-        id: "Task " + i,
-        progress: parseInt(Math.random() * 100, 10)
-    }
-});
-tasks[1].dependencies = "Task 0"
-tasks[2].dependencies = "Task 1"
-tasks[3].dependencies = "Task 2"
-tasks[5].dependencies = "Task 4"
-
-var gantt_chart = new Gantt("#gantt-1", tasks);
-// document.querySelector(".gantt-container").scrollLeft = 2045;
-
-// change view mode example
-var gantt2 = new Gantt("#gantt-2", tasks);
-gantt2.change_view_mode('Week');
-
-$(function() {
-    $(".btn-group").on("click", "button", function() {
-        $btn = $(this);
-        var mode = $btn.text();
-        gantt2.change_view_mode(mode);
-        $btn.parent().find('button').removeClass('active');
-        $btn.addClass('active');
-    });
-});
-
-// event listener example
-var gantt3 = new Gantt("#gantt-3", tasks, {
-    on_click: function (task) {
-        console.log(task);
+var tasks = [
+    {
+      id: 'Task 1',
+      name: 'Ecriture du CDC',
+      start: '2021-07-20',
+      end: '2021-07-22',
+      progress: 90,
+      dependencies: ''
     },
-    on_date_change: function(task, start, end) {
-        console.log(task, start, end);
+    {
+        id: 'Task 2',
+        name: 'Afficher commits (No-Change)',
+        start: '2021-07-22',
+        end: '2021-07-27',
+        progress: 60,
+        dependencies: ''
     },
-    on_progress_change: function(task, progress) {
-        console.log(task, progress);
+    {
+        id: 'Task 3',
+        name: 'Créer page Web',
+        start: '2021-07-27',
+        end: '2021-07-29',
+        progress: 0,
+        dependencies: 'Task 2'
     },
-    on_view_change: function(mode) {
-        console.log(mode);
-    }
-});
+    {
+        id: 'Task 4',
+        name: 'Triage des commits',
+        start: '2021-07-29',
+        end: '2021-08-05',
+        progress: 0,
+        dependencies: 'Task 3'
+    },
+    {
+        id: 'Task 5',
+        name: 'Paramètres',
+        start: '2021-08-05',
+        end: '2021-08-07',
+        progress: 0,
+        dependencies: 'Task 4'
+    },
+    {
+        id: 'Task 6',
+        name: 'FIN',
+        start: '2021-08-07',
+        end: '2021-08-08',
+        progress: 0,
+        dependencies: 'Task 5',
+    },
+]
 
-var gantt4 = new Gantt("#gantt-4", tasks, {
-    custom_popup_html: function(task) {
-      const end_date = task._end.format('MMM D');
-      return `
-        <div class="details-container">
-          <h5>${task.name}</h5>
-          <p>Expected to finish by ${end_date}</p>
-          <p>${task.progress}% completed!</p>
-        </div>
-      `;
-    }
-})
+var gantt_chart = new Gantt("#gantt-1", tasks, {
+    header_height: 50,
+	column_width: 30,
+	step: 24,
+	view_modes: ['Quarter Day', 'Half Day', 'Day', 'Week', 'Month'],
+	bar_height: 20,
+	bar_corner_radius: 3,
+	arrow_curve: 5,
+	padding: 18,
+	view_mode: 'Half Day',   
+	date_format: 'YYYY-MM-DD HH:mm:ss.SSS',
+	language: 'fr',
+	custom_popup_html: null
+});
